@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>1132919</title>
+
+  <style>
+    :root{
+      --bg1: #0f172a;
+      --bg2: #0b2545;
+      --card: rgba(255,255,255,0.06);
+      --accent: #6ee7b7;
+      --muted: rgba(255,255,255,0.75);
+      --glass: rgba(255,255,255,0.04);
+      --glass-strong: rgba(255,255,255,0.06);
+      font-family: -apple-system, "Segoe UI", Roboto, "Noto Sans TC", "Microsoft JhengHei", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    html,body{
+      height:100%;
+      margin:0;
+      background: linear-gradient(135deg,var(--bg1) 0%, var(--bg2) 100%);
+      color: #fff;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    .wrap{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:40px 20px;
+      box-sizing:border-box;
+    }
+
+    .container{
+      width:100%;
+      max-width:980px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+      border-radius:16px;
+      box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+      overflow:hidden;
+      display:grid;
+      grid-template-columns: 1fr 380px;
+      gap:1px;
+      border: 1px solid rgba(255,255,255,0.04);
+      backdrop-filter: blur(6px);
+    }
+
+    /* 左側主區 */
+    .main{
+      padding:48px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+      display:flex;
+      flex-direction:column;
+      gap:20px;
+      align-items:flex-start;
+      justify-content:center;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .logo {
+      width:56px;
+      height:56px;
+      border-radius:12px;
+      display:inline-grid;
+      place-items:center;
+      background: linear-gradient(135deg, #1f7bd6, #6ee7b7);
+      color:#07203a;
+      font-weight:700;
+      font-size:20px;
+      box-shadow: 0 6px 18px rgba(16,40,75,0.45), inset 0 -4px 12px rgba(255,255,255,0.06);
+    }
+
+    .brand h4{
+      margin:0;
+      font-size:18px;
+      letter-spacing:0.6px;
+      color:var(--muted);
+      font-weight:600;
+    }
+
+    .hero {
+      margin-top:8px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding:28px;
+      border-radius:12px;
+      width:100%;
+      box-shadow: 0 6px 18px rgba(2,6,23,0.5);
+      border: 1px solid var(--glass-strong);
+      display:flex;
+      align-items:center;
+      gap:20px;
+    }
+
+    .id-badge{
+      width:140px;
+      height:140px;
+      border-radius:12px;
+      background: radial-gradient(circle at 20% 20%, rgba(110,231,183,0.18), transparent 20%),
+                  linear-gradient(180deg,#07203a 0%, #0b2545 100%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+      border:1px solid rgba(255,255,255,0.03);
+    }
+
+    .id-badge .num{
+      font-size:28px;
+      font-weight:800;
+      letter-spacing:3px;
+      color: var(--accent);
+    }
+    .id-badge .label{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:6px;
+    }
+
+    .info{
+      flex:1;
+    }
+    .info h1{
+      margin:0 0 6px 0;
+      font-size:28px;
+      letter-spacing:1px;
+      color:#fff;
+    }
+    .info p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.5;
+    }
+
+    /* 右側區塊：作業連結區 */
+    .sidebar{
+      padding:28px;
+      background: linear-gradient(180deg, rgba(2,6,23,0.3), rgba(2,10,30,0.2));
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      align-items:stretch;
+      justify-content:flex-start;
+    }
+
+    .hw-title{
+      font-weight:700;
+      font-size:14px;
+      color:var(--accent);
+      letter-spacing:0.6px;
+    }
+
+    .hw-card{
+      background: var(--card);
+      padding:16px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.03);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .hw-card .hw-line{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:8px;
+    }
+
+    .hw-card .hw-name{
+      font-size:16px;
+      color:#fff;
+      font-weight:700;
+    }
+
+    .hw-card .hw-note{
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    .hw-cta{
+      display:flex;
+      gap:10px;
+      margin-top:6px;
+    }
+
+    .btn{
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:10px;
+      font-weight:700;
+      font-size:14px;
+      color:#07203a;
+      background: linear-gradient(90deg,#6ee7b7,#3bb1ff);
+      border: none;
+      cursor:pointer;
+      box-shadow: 0 8px 20px rgba(59,177,255,0.12);
+    }
+
+    .btn.secondary{
+      background: transparent;
+      color: var(--muted);
+      border:1px solid rgba(255,255,255,0.04);
+      box-shadow:none;
+    }
+
+    small.hint{
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    footer{
+      margin-top:12px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    /* small screens */
+    @media (max-width:880px){
+      .container{
+        grid-template-columns: 1fr;
+        padding:0;
+      }
+      .sidebar{
+        order:2;
+      }
+      .main{
+        order:1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap" role="main">
+    <div class="container" aria-label="學號頁面">
+      <div class="main">
+        <div class="brand" aria-hidden="false">
+          <div class="logo" aria-hidden="true">HW</div>
+          <div>
+            <h4>學生識別頁面</h4>
+            <div style="color:var(--muted);font-size:13px;margin-top:4px;">
+              此頁面主要呈現學號資訊，並預留作業連結區
+            </div>
+          </div>
+        </div>
+
+        <div class="hero" role="region" aria-label="學號資訊">
+          <div class="id-badge" aria-hidden="false">
+            <div class="num" id="student-id">1132919</div>
+            <div class="label">學號</div>
+          </div>
+
+          <div class="info">
+            <h1>學號：<span id="student-id-2">1132919</span></h1>
+            <p>歡迎！這裡是你的個人識別頁面。請在「往後作業連結區」放置你的 HW08 檔案或連結，按鈕目前為範例，之後可直接更新連結。</p>
+            <footer>版面設計範例 · 簡潔、響應式、易於嵌入課程平台</footer>
+          </div>
+        </div>
+
+        <div style="margin-top:20px;color:var(--muted);font-size:13px;">
+          小提示：若要把本頁上傳至課程系統，可將檔名改為 <code>1132919-index.html</code> 並確認右側 HW 連結已指向你的作業檔案。
+        </div>
+      </div>
+
+      <aside class="sidebar" aria-label="往後作業連結區">
+        <div class="hw-title">往後作業連結區</div>
+
+        <div class="hw-card" role="group" aria-labelledby="hw08-title">
+          <div class="hw-line">
+            <div>
+              <div id="hw08-title" class="hw-name">HW08 -- 1132919</div>
+              <div class="hw-note">在此區放置 HW08 的上傳連結或檔案說明</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:12px;color:var(--muted)">狀態：未上傳</div>
+            </div>
+          </div>
+
+          <div class="hw-cta">
+            <!-- 範例按鈕：把 href 改成你未來的連結（例如 Google Drive、GitHub、或課程平台網址） -->
+            <a class="btn" id="hw-link" href="#" aria-label="HW08 連結（範例）">
+              開啟 HW08
+            </a>
+
+            <a class="btn secondary" href="mailto:teacher@example.edu?subject=HW08%20-%201132919" aria-label="通知老師（範例）">
+              通知老師
+            </a>
+          </div>
+
+          <small class="hint">備註：請依課程規定命名檔案為 <code>HW08-1132919.zip</code> 或老師指定格式。</small>
+        </div>
+
+        <div style="margin-top:6px;color:var(--muted);font-size:13px;">
+          若需要樣式調整或新增其他作業區，請直接編輯本檔案的 HTML 標籤與 CSS。
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    // 保持頁面上學號的單一來源
+    (function(){
+      const id = '1132919';
+      document.getElementById('student-id').textContent = id;
+      document.getElementById('student-id-2').textContent = id;
+
+      // 右側連結範例：如果有實際連結，把 href 換掉即可
+      const hwLink = document.getElementById('hw-link');
+      // hwLink.href = 'https://your-storage.example.com/HW08-1132919.zip'; // <-- 把這一行取消註解並設定實際連結
+      hwLink.addEventListener('click', function(e){
+        if(hwLink.getAttribute('href') === '#'){
+          e.preventDefault();
+          alert('目前為範例按鈕：請把本檔案中的 hw-link.href 更新為實際作業連結。');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
