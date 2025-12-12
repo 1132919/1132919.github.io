@@ -325,8 +325,18 @@
           alert('目前為範例按鈕：請把本檔案中的 hw-link.href 更新為實際作業連結。');
         }
       });
+      
+    const hwLink = document.getElementById('hw-link');
+      hwLink.href = 'https://1132919.github.io/hw09-1132919.html';
+      hwLink.addEventListener('click', function(e){
+        if(hwLink.getAttribute('href') === '#'){
+          e.preventDefault();
+          alert('目前為範例按鈕：請把本檔案中的 hw-link.href 更新為實際作業連結。');
+        }
+      });
     })();
   </script>
 </body>
 </html>
+
 
