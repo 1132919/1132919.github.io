@@ -49,7 +49,6 @@
       backdrop-filter: blur(6px);
     }
 
-    /* 左側主區 */
     .main{
       padding:48px;
       background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
@@ -141,7 +140,6 @@
       line-height:1.5;
     }
 
-    /* 右側區塊：作業連結區 */
     .sidebar{
       padding:28px;
       background: linear-gradient(180deg, rgba(2,6,23,0.3), rgba(2,10,30,0.2));
@@ -227,7 +225,6 @@
       font-size:13px;
     }
 
-    /* small screens */
     @media (max-width:880px){
       .container{
         grid-template-columns: 1fr;
@@ -246,8 +243,8 @@
   <div class="wrap" role="main">
     <div class="container" aria-label="學號頁面">
       <div class="main">
-        <div class="brand" aria-hidden="false">
-          <div class="logo" aria-hidden="true">HW</div>
+        <div class="brand">
+          <div class="logo">HW</div>
           <div>
             <h4>學生識別頁面</h4>
             <div style="color:var(--muted);font-size:13px;margin-top:4px;">
@@ -256,15 +253,15 @@
           </div>
         </div>
 
-        <div class="hero" role="region" aria-label="學號資訊">
-          <div class="id-badge" aria-hidden="false">
+        <div class="hero">
+          <div class="id-badge">
             <div class="num" id="student-id">1132919</div>
             <div class="label">學號</div>
           </div>
 
           <div class="info">
             <h1>學號：<span id="student-id-2">1132919</span></h1>
-            <p>歡迎！這裡是你的個人識別頁面。請在「往後作業連結區」放置你的 HW08 檔案或連結，按鈕目前為範例，之後可直接更新連結。</p>
+            <p>歡迎！這裡是你的個人識別頁面。請在「往後作業連結區」放置你的 HW08、HW09 作業連結。</p>
             <footer>版面設計範例 · 簡潔、響應式、易於嵌入課程平台</footer>
           </div>
         </div>
@@ -277,6 +274,7 @@
       <aside class="sidebar" aria-label="往後作業連結區">
         <div class="hw-title">往後作業連結區</div>
 
+        <!-- HW08 -->
         <div class="hw-card" role="group" aria-labelledby="hw08-title">
           <div class="hw-line">
             <div>
@@ -289,54 +287,65 @@
           </div>
 
           <div class="hw-cta">
-            <!-- 範例按鈕：把 href 改成你未來的連結（例如 Google Drive、GitHub、或課程平台網址） -->
-            <a class="btn" id="hw-link" href="#" aria-label="HW08 連結（範例）">
-              開啟 HW08
-            </a>
+            <a class="btn" id="hw-link" href="#" aria-label="HW08 連結（範例）">開啟 HW08</a>
+            <a class="btn secondary" href="mailto:teacher@example.edu?subject=HW08%20-%201132919">通知老師</a>
+          </div>
+          <small class="hint">請命名為 <code>HW08-1132919.zip</code></small>
+        </div>
 
-            <a class="btn secondary" href="mailto:teacher@example.edu?subject=HW08%20-%201132919" aria-label="通知老師（範例）">
-              通知老師
-            </a>
+        <!-- HW09 -->
+        <div class="hw-card" role="group" aria-labelledby="hw09-title">
+          <div class="hw-line">
+            <div>
+              <div id="hw09-title" class="hw-name">HW09 -- 1132919</div>
+              <div class="hw-note">在此區放置 HW09 的上傳連結或檔案說明</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:12px;color:var(--muted)">狀態：未上傳</div>
+            </div>
           </div>
 
-          <small class="hint">備註：請依課程規定命名檔案為 <code>HW08-1132919.zip</code> 或老師指定格式。</small>
+          <div class="hw-cta">
+            <a class="btn" id="hw09-link" href="#" aria-label="HW09 連結（範例）">開啟 HW09</a>
+            <a class="btn secondary" href="mailto:teacher@example.edu?subject=HW09%20-%201132919">通知老師</a>
+          </div>
+          <small class="hint">請命名為 <code>HW09-1132919.zip</code></small>
         </div>
 
         <div style="margin-top:6px;color:var(--muted);font-size:13px;">
-          若需要樣式調整或新增其他作業區，請直接編輯本檔案的 HTML 標籤與 CSS。
+          若需要樣式調整或新增其他作業區，請直接編輯本檔案的 HTML 與 CSS。
         </div>
       </aside>
     </div>
   </div>
 
   <script>
-    // 保持頁面上學號的單一來源
+    // 學號同步
     (function(){
       const id = '1132919';
       document.getElementById('student-id').textContent = id;
       document.getElementById('student-id-2').textContent = id;
 
-      // 右側連結範例：如果有實際連結，把 href 換掉即可
+      // HW08 連結（你可自行改成自己的網址）
       const hwLink = document.getElementById('hw-link');
-      hwLink.href = 'https://1132919.github.io/1132919 -HW08.html';
+      hwLink.href = 'https://1132919.github.io/1132919-HW08.html';
       hwLink.addEventListener('click', function(e){
         if(hwLink.getAttribute('href') === '#'){
           e.preventDefault();
           alert('目前為範例按鈕：請把本檔案中的 hw-link.href 更新為實際作業連結。');
         }
       });
-      
-    const hwLink = document.getElementById('hw-link');
-      hwLink.href = 'https://1132919.github.io/hw09-1132919.html';
-      hwLink.addEventListener('click', function(e){
-        if(hwLink.getAttribute('href') === '#'){
+
+      // HW09 連結（你可自行改成自己的網址）
+      const hw09Link = document.getElementById('hw09-link');
+      hw09Link.href = 'https://1132919.github.io/1132919-HW09.html';
+      hw09Link.addEventListener('click', function(e){
+        if(hw09Link.getAttribute('href') === '#'){
           e.preventDefault();
-          alert('目前為範例按鈕：請把本檔案中的 hw-link.href 更新為實際作業連結。');
+          alert('目前為範例按鈕：請把本檔案中的 hw09-link.href 更新為實際作業連結。');
         }
       });
     })();
   </script>
 </body>
 </html>
-
-
