@@ -1,6 +1,6 @@
 :root{
---bg: #0f1226;
---text: #e7e8ee;
+--bg: #43A5BE;
+--text: #253342;
 --x: #ff6b6b;
 --o: #4dd0e1;
 --win: #ffe066;
@@ -37,5 +37,31 @@ h1{ margin:0 0 16px 0; font-size:24px; }
 .scoreboard h2{ margin-bottom:8px; font-size:18px; }
 /* 設計Reset鍵處<div class=“controls”>與button */
 .controls{ margin-top:12px; }
-button{ padding:8px 12px; border-radius:10px; border:0; background:#21264a; color:var(--text); cursor:pointer; }
+button{ padding:8px 12px; border-radius:10px; border:0; background:#F5C26B; color:var(--text); cursor:pointer; }
 button:disabled{ opacity:.5; cursor:not-allowed; }
+/* 棋盤 + 計分板橫向排列 */
+.game-area{
+    display: flex;
+    gap: 24px;              /* 棋盤與計分板間距 */
+    justify-content: center;
+    align-items: center;
+    margin-top: 16px;
+}
+
+/* 手機版自動變上下排列 */
+@media (max-width: 700px){
+    .game-area{
+        flex-direction: column;
+    }
+}
+.board{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:12px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    padding:12px;
+    border-radius:14px;
+    width:min(560px, 92%);
+    aspect-ratio:1/1;
+    margin: 0 auto; /* 加這行就會水平置中 */
+}
