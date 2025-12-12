@@ -1,33 +1,110 @@
-body {
-    font-family: "Microsoft JhengHei", sans-serif;
+:root {
+    --bg: #43A5BE;
+    --text: #253342;
+    --win: #ffe066;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Noto Sans TC', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: grid;
+    place-items: center;
+    padding: 24px;
     text-align: center;
-    background-color: #f2f2f2;
 }
+
+/* 標題 */
 h1 {
-    color: #333;
+    margin: 0 0 20px 0;
+    font-size: 36px;  /* 放大標題 */
+    font-weight: 800;
 }
+
+/* 狀態提示（輪到誰） */
+.status {
+    margin-bottom: 16px;
+    font-size: 24px;  /* 放大輪到誰文字 */
+    font-weight: 600;
+}
+
+/* 棋盤容器 - 固定大小 */
 .board {
-    width: 300px;
-    height: 300px;
-    margin: 20px auto;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    gap: 5px;
+    gap: 12px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    padding: 12px;
+    border-radius: 14px;
+    width: 360px;      /* 固定寬度 */
+    height: 360px;     /* 固定高度 */
+    margin: 0 auto;
 }
+
+/* 棋格 */
 .cell {
-    background-color: white;
-    border: 2px solid #888;
-    font-size: 2em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border-radius: 10px;
+    background: white;
+    border: 1px solid rgba(255,255,255,0.03);
+    font-size: 48px;
+    font-weight: 800;
+    display: grid;
+    place-items: center;
     cursor: pointer;
-    transition: background-color 0.3s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+
+    aspect-ratio: 1 / 1;   /* 保持正方形 */
+    width: 100%;
+    height: 100%;
+    transition: background-color 0.2s;  /* 點擊或 hover 不改變大小 */
 }
-.cell:hover {
-    background-color: #e0e0e0;
+
+/* 點擊後背景色 */
+.cell:active {
+    background-color: #f0f0f0;
 }
+
+/* X / O 顏色 */
+.cell.x { color: var(--x); }
+.cell.o { color: var(--o); }
+.cell.win { background: var(--win); color: #000; }
+
+/* 控制按鈕 */
 .controls {
-    margin-top: 10px;
+    margin-top: 12px;
+}
+
+button {
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 0;
+    background: #F5C26B;
+    color: var(--text);
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 棋盤與計分板排列 */
+.game-area {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 16px;
+}
+
+/* 手機版改上下排列 */
+@media (max-width: 700px) {
+    .game-area {
+        flex-direction: column;
+    }
 }
