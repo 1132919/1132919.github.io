@@ -46,3 +46,39 @@ body {
 .control {
   margin: 10px;
 }
+.hint {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.cell:hover .hint {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.hint {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  opacity: 0.6;
+}
+
+.hint.normal {
+  background: #9acd32;
+}
+
+.hint.corner {
+  background: gold;
+}
+
+.cell:hover .hint {
+  opacity: 1;
+}
+#restartBtn {
+  padding: 8px 16px;
+  margin-top: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 6px;
+}
