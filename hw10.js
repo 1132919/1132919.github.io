@@ -2,6 +2,12 @@ const EMPTY = 0;
 const BLACK = 1;
 const WHITE = 2;
 
+const restartBtn = document.getElementById("restartBtn");
+restartBtn.onclick = restartGame;
+
+const PASS_MESSAGE_DELAY = 2000; // 跳過提示停留 2 秒
+
+let passCount = 0; // 連續無合法步次數
 let currentPlayer = BLACK;
 let board = [];
 
@@ -23,6 +29,8 @@ function initBoard() {
 
 function renderBoard() {
   boardDiv.innerHTML = "";
+  const showHint = currentPlayer === BLACK;
+
   for (let i = 0; i < 8; i++) {
     for (let j = 0; j < 8; j++) {
       const cell = document.createElement("div");
@@ -33,6 +41,10 @@ function renderBoard() {
         const piece = document.createElement("div");
         piece.className = "piece " + (board[i][j] === BLACK ? "black" : "white");
         cell.appendChild(piece);
+      } else if (showHint && isValidMove(i, j, BLACK)) {
+        const hint = document.createElement("div");
+        hint.className = "hint " + (isCorner(i, j) ? "corner" : "normal");
+        cell.appendChild(hint);
       }
 
       boardDiv.appendChild(cell);
@@ -44,26 +56,25 @@ function playerMove(x, y) {
   if (currentPlayer !== BLACK) return;
   if (!isValidMove(x, y, BLACK)) return;
 
+  passCount = 0;
   makeMove(x, y, BLACK);
   currentPlayer = WHITE;
   updateStatus();
-  setTimeout(computerMove, 600);
+
+  setTimeout(handleTurn, 600);
 }
 
 function computerMove() {
-  let move;
-  if (difficultySelect.value === "easy") {
-    move = computerEasy();
-  } else {
-    move = computerHard();
-  }
+  const move = difficultySelect.value === "easy" ? computerEasy() : computerHard();
 
   if (move) {
+    passCount = 0;
     makeMove(move.x, move.y, WHITE);
   }
 
   currentPlayer = BLACK;
   updateStatus();
+  setTimeout(handleTurn, 600);
 }
 
 function isValidMove(x, y, player) {
@@ -95,39 +106,8 @@ function isValidMove(x, y, player) {
 
 function makeMove(x, y, player) {
   board[x][y] = player;
-  flipPieces(x, y, player);
   renderBoard();
-}
-
-function flipPieces(x, y, player) {
-  const opponent = player === BLACK ? WHITE : BLACK;
-  const dirs = [-1, 0, 1];
-
-  for (let dx of dirs) {
-    for (let dy of dirs) {
-      if (dx === 0 && dy === 0) continue;
-      let pieces = [];
-      let i = x + dx, j = y + dy;
-
-      while (i >= 0 && i < 8 && j >= 0 && j < 8) {
-        if (board[i][j] === opponent) {
-          pieces.push({ i, j });
-        } else if (board[i][j] === player) {
-          pieces.forEach((p, idx) => {
-            setTimeout(() => {
-              board[p.i][p.j] = player;
-              renderBoard();
-            }, idx * 150);
-          });
-          break;
-        } else {
-          break;
-        }
-        i += dx;
-        j += dy;
-      }
-    }
-  }
+  flipPiecesSequential(x, y, player);
 }
 
 function getAllValidMoves(player) {
@@ -163,6 +143,7 @@ function computerHard() {
       best = m;
     }
   });
+
   return best;
 }
 
@@ -199,6 +180,137 @@ function isCorner(x, y) {
 }
 
 function updateStatus() {
+  if (checkGameOver()) return;
+
   statusDiv.textContent =
-    currentPlayer === BLACK ? "你的回合（黑棋）" : "電腦思考中（白棋）";
+    currentPlayer === BLACK
+      ? "你的回合（黑棋）"
+      : "電腦回合（白棋）";
+}
+
+function restartGame() {
+  passCount = 0;
+  currentPlayer = BLACK;
+  initBoard();
+  renderBoard();
+  updateStatus();
+}
+
+function hasAnyValidMove(player) {
+  return getAllValidMoves(player).length > 0;
+}
+
+function countScore() {
+  let black = 0, white = 0;
+  for (let row of board) {
+    for (let cell of row) {
+      if (cell === BLACK) black++;
+      if (cell === WHITE) white++;
+    }
+  }
+  return { black, white };
+}
+
+function checkGameOver() {
+  if (isBoardFull() || passCount >= 2) {
+    const score = countScore();
+    showGameResult(score);
+    return true;
+  }
+  return false;
+}
+
+function showGameResult(score) {
+  let result = "";
+  if (score.black > score.white) result = "你贏了！";
+  else if (score.black < score.white) result = "電腦獲勝！";
+  else result = "平手！";
+
+  statusDiv.innerHTML = `
+    遊戲結束<br>
+    黑棋：${score.black}　白棋：${score.white}<br>
+    ${result}
+  `;
+}
+
+function flipPiecesSequential(x, y, player) {
+  const opponent = player === BLACK ? WHITE : BLACK;
+  const directions = [
+    [-1, -1], [-1, 0], [-1, 1],
+    [ 0, -1],          [ 0, 1],
+    [ 1, -1], [ 1, 0], [ 1, 1]
+  ];
+
+  directions.forEach(([dx, dy]) => {
+    let i = x + dx;
+    let j = y + dy;
+    let line = [];
+
+    while (i >= 0 && i < 8 && j >= 0 && j < 8) {
+      if (board[i][j] === opponent) {
+        line.push({ i, j });
+      } else if (board[i][j] === player) {
+        line.forEach((pos, idx) => {
+          setTimeout(() => {
+            const index = pos.i * 8 + pos.j;
+            const cell = boardDiv.children[index];
+            const piece = cell.querySelector(".piece");
+
+            if (piece) {
+              piece.classList.add("flip");
+              setTimeout(() => {
+                board[pos.i][pos.j] = player;
+                renderBoard();
+              }, 200);
+            }
+          }, idx * 150);
+        });
+        break;
+      } else {
+        break;
+      }
+      i += dx;
+      j += dy;
+    }
+  });
+}
+
+function handleTurn() {
+  renderBoard(); // ← 每回合都更新提示
+
+  if (isBoardFull()) {
+    checkGameOver();
+    return;
+  }
+
+  if (!hasAnyValidMove(currentPlayer)) {
+    passCount++;
+    statusDiv.textContent =
+      (currentPlayer === BLACK ? "你" : "電腦") +
+      "沒有合法落子，跳過回合";
+
+    if (passCount >= 2) {
+      setTimeout(() => checkGameOver(), PASS_MESSAGE_DELAY);
+      return;
+    }
+
+    currentPlayer = currentPlayer === BLACK ? WHITE : BLACK;
+    setTimeout(handleTurn, PASS_MESSAGE_DELAY);
+    return;
+  }
+
+  passCount = 0;
+
+  if (currentPlayer === WHITE) {
+    setTimeout(computerMove, 600);
+  } else {
+    updateStatus();
+  }
+}
+
+function isBoardFull() {
+  for (let i = 0; i < 8; i++)
+    for (let j = 0; j < 8; j++)
+      if (board[i][j] === EMPTY) return false;
+  return true;
 }
