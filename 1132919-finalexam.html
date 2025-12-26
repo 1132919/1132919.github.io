@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>1132919 -FinalTerm</title>
+  <style>
+    :root{
+      --bg1:#f6fbff;
+      --bg2:#eef8f3;
+      --card:#ffffff;
+      --ink:#1f2a37;
+      --muted:#6b7280;
+      --brand:#2bb673;
+      --brand2:#34d399;
+      --line:#d7e3f0;
+      --shadow: 0 18px 40px rgba(15, 23, 42, 0.10);
+    }
+    *{ box-sizing: border-box; }
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background: radial-gradient(1200px 800px at 20% 10%, var(--bg1), transparent 65%),
+                  radial-gradient(1000px 700px at 80% 90%, var(--bg2), transparent 60%),
+                  #f3f7fb;
+      color: var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, "Noto Sans TC", sans-serif;
+    }
+    .app{
+      width:min(980px, 94vw);
+      background: var(--card);
+      border: 1px solid rgba(215,227,240,0.9);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .topbar{
+      padding: 18px 20px;
+      display:flex;
+      gap:14px;
+      align-items:center;
+      justify-content:space-between;
+      border-bottom: 1px solid rgba(215,227,240,0.9);
+      background: linear-gradient(180deg, rgba(43,182,115,0.12), rgba(255,255,255,0));
+    }
+    .brand{
+      display:flex; gap:12px; align-items:center;
+    }
+    .logo{
+      width:42px; height:42px;
+      border-radius: 14px;
+      background: radial-gradient(circle at 30% 30%, var(--brand2), var(--brand));
+      box-shadow: 0 10px 18px rgba(43,182,115,0.28);
+      position:relative;
+    }
+    .logo::after{
+      content:"";
+      position:absolute;
+      inset:10px;
+      border-radius: 12px;
+      border: 2px solid rgba(255,255,255,0.75);
+    }
+    .title{
+      line-height:1.1;
+    }
+    .title h1{
+      font-size: 18px;
+      margin:0;
+      letter-spacing: 0.2px;
+    }
+    .title p{
+      margin:4px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .pill{
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(43,182,115,0.12);
+      border: 1px solid rgba(43,182,115,0.22);
+      color: #0f5132;
+      font-weight: 700;
+      font-size: 13px;
+      white-space:nowrap;
+    }
+
+    .content{
+      display:grid;
+      grid-template-columns: 1fr 320px;
+      gap: 16px;
+      padding: 16px;
+    }
+    @media (max-width: 860px){
+      .content{ grid-template-columns: 1fr; }
+    }
+
+    .boardCard{
+      background: #fbfdff;
+      border: 1px solid rgba(215,227,240,0.9);
+      border-radius: 18px;
+      padding: 14px;
+    }
+    .status{
+      margin: 0 0 10px 0;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(215,227,240,0.9);
+      background: #ffffff;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+    .status strong{ font-weight: 800; }
+    .status.warn{
+      border-color: rgba(245, 158, 11, 0.35);
+      background: rgba(245, 158, 11, 0.08);
+    }
+    .status.over{
+      border-color: rgba(239, 68, 68, 0.35);
+      background: rgba(239, 68, 68, 0.07);
+    }
+
+    .boardWrap{
+      display:flex;
+      justify-content:center;
+      padding: 8px;
+    }
+    canvas{
+      width: min(560px, 86vw);
+      height: auto;
+      border-radius: 18px;
+      background: radial-gradient(circle at 40% 35%, #f3d9b0 0%, #e9c997 55%, #d9b67c 100%);
+      border: 1px solid rgba(0,0,0,0.06);
+      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.10);
+      touch-action:none;
+    }
+
+    .side{
+      background: #fbfdff;
+      border: 1px solid rgba(215,227,240,0.9);
+      border-radius: 18px;
+      padding: 14px;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+    }
+
+    .sectionTitle{
+      font-size: 12px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 4px 0 0;
+    }
+
+    .btnRow{
+      display:flex;
+      gap:10px;
+      flex-wrap: wrap;
+    }
+    button{
+      border: 1px solid rgba(215,227,240,0.9);
+      background: #ffffff;
+      color: var(--ink);
+      padding: 11px 12px;
+      border-radius: 14px;
+      font-weight: 800;
+      cursor:pointer;
+      transition: transform .15s ease, box-shadow .15s ease;
+      box-shadow: 0 10px 18px rgba(15, 23, 42, 0.05);
+      flex: 1 1 auto;
+    }
+    button:hover:not(:disabled){
+      transform: translateY(-1px);
+      box-shadow: 0 14px 22px rgba(15, 23, 42, 0.08);
+    }
+    button:disabled{
+      opacity: .55;
+      cursor:not-allowed;
+      transform:none;
+      box-shadow:none;
+    }
+    .primary{
+      background: linear-gradient(180deg, rgba(43,182,115,0.95), rgba(43,182,115,0.82));
+      border-color: rgba(43,182,115,0.45);
+      color:#ffffff;
+    }
+    .ghost{
+      background: rgba(43,182,115,0.10);
+      border-color: rgba(43,182,115,0.25);
+      color:#0f5132;
+    }
+
+    .note{
+      border-radius: 14px;
+      border: 1px dashed rgba(215,227,240,1);
+      background: #ffffff;
+      padding: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .tiny{
+      font-size:12px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="title">
+          <h1>九路圍棋｜你（黑） vs 電腦（白）</h1>
+          <p>點交叉點下子・提子動畫・叫吃提示・終局只顯示勝負</p>
+        </div>
+      </div>
+      <div class="pill">1122915-FinalTerm</div>
+    </div>
+
+    <div class="content">
+      <div class="boardCard">
+        <div class="status" id="status">
+          <strong>黑方回合</strong>：點棋盤交叉點下子（你先手）
+        </div>
+        <div class="boardWrap">
+          <canvas id="goboard" width="560" height="560" aria-label="9x9 go board"></canvas>
+        </div>
+      </div>
+
+      <div class="side">
+        <div>
+          <div class="sectionTitle">Controls</div>
+          <div class="btnRow" style="margin-top:10px;">
+            <button id="undoBtn">悔棋</button>
+            <button id="newBtn" class="primary">新局</button>
+          </div>
+          <div class="btnRow" style="margin-top:10px;">
+            <button id="passBtn" class="ghost">虛手（停一手）</button>
+            <button id="overlayBtn">活棋/地盤 顯示：關</button>
+          </div>
+        </div>
+
+        <div class="note">
+          <b>小提醒</b><br>
+          ・你永遠是 <b>黑方</b>（只能下黑）<br>
+          ・電腦永遠是 <b>白方</b>（自動下白）<br>
+          ・終局只顯示「誰贏誰輸」，不顯示數子明細
+          <div class="tiny" style="margin-top:8px;">
+            （勝負判定內部仍用「子 + 地 + 貼目(3.75)」計算，但不呈現分數）
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+class NineBoardGo {
+  constructor(){
+    this.N = 9;
+    this.board = this.makeEmpty();
+    this.currentPlayer = 1; // 1 black(user), -1 white(AI)
+    this.consecutivePasses = 0;
+    this.gameOver = false;
+
+    this.komi = 3.75; // 內部勝負判定用（不顯示分數）
+
+    // captures counters (optional internal)
+    this.captures = { black: 0, white: 0 };
+
+    // KO (simple): forbid returning to previous position
+    this.prevBoardHash = this.hashBoard(this.board);
+
+    this.history = [];
+    this.lastMove = null;
+
+    // overlays + warnings
+    this.showOverlay = false;
+    this.atariHighlights = []; // [{stones:[[r,c]...], kind:"opp"/"self"}]
+    this.captureAnims = [];    // [{r,c,player,start,dur}]
+
+    this.canvas = document.getElementById("goboard");
+    this.ctx = this.canvas.getContext("2d");
+    this.padding = 46;
+    this.cell = (this.canvas.width - this.padding*2) / (this.N - 1);
+
+    // 9路星位（四角+天元）
+    this.starPoints = [{r:2,c:2},{r:2,c:6},{r:6,c:2},{r:6,c:6},{r:4,c:4}];
+
+    this.bindUI();
+    this.draw();
+    this.updateStatus();
+    this.startAnimLoop();
+  }
+
+  // ---------- basics ----------
+  makeEmpty(){ return Array(this.N).fill(0).map(()=>Array(this.N).fill(0)); }
+  cloneBoard(b){ return b.map(row=>row.slice()); }
+  inBounds(r,c){ return r>=0 && r<this.N && c>=0 && c<this.N; }
+  neighbors4(r,c){ return [[r-1,c],[r+1,c],[r,c-1],[r,c+1]].filter(([rr,cc])=>this.inBounds(rr,cc)); }
+  neighbors8(r,c){
+    const ds=[-1,0,1], out=[];
+    for(const dr of ds) for(const dc of ds){
+      if(dr===0 && dc===0) continue;
+      out.push([r+dr,c+dc]);
+    }
+    return out;
+  }
+  rcToXY(r,c){ return { x: this.padding + c*this.cell, y: this.padding + r*this.cell }; }
+  hashBoard(b){ return b.map(row=>row.join(",")).join(";"); }
+
+  bindUI(){
+    this.canvas.addEventListener("click", (e)=>this.onCanvasClick(e));
+    document.getElementById("undoBtn").onclick = ()=>this.undo();
+    document.getElementById("newBtn").onclick = ()=>newGame();
+    document.getElementById("passBtn").onclick = ()=>this.pass();
+    document.getElementById("overlayBtn").onclick = ()=>this.toggleOverlay();
+  }
+
+  toggleOverlay(){
+    this.showOverlay = !this.showOverlay;
+    document.getElementById("overlayBtn").textContent =
+      `活棋/地盤 顯示：${this.showOverlay ? "開" : "關"}`;
+    this.draw();
+  }
+
+  setStatus(html, type="normal"){
+    const el = document.getElementById("status");
+    el.className = "status" + (type==="warn" ? " warn" : type==="over" ? " over" : "");
+    el.innerHTML = html;
+  }
+
+  pickIntersection(e){
+    const rect = this.canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const rFloat = (y - this.padding) / this.cell;
+    const cFloat = (x - this.padding) / this.cell;
+
+    const r = Math.round(rFloat);
+    const c = Math.round(cFloat);
+    if(r < 0 || r >= this.N || c < 0 || c >= this.N) return {r:null,c:null};
+
+    const ix = this.padding + c*this.cell;
+    const iy = this.padding + r*this.cell;
+    const dist = Math.hypot(ix-x, iy-y);
+    if(dist > this.cell*0.42) return {r:null,c:null};
+
+    return {r,c};
+  }
+
+  // ---------- groups / liberties ----------
+  getGroup(board, r, c){
+    const color = board[r][c];
+    if(color===0) return {stones:[], libs:new Set()};
+    const stack = [[r,c]];
+    const seen = Array(this.N).fill(0).map(()=>Array(this.N).fill(false));
+    const stones = [];
+    const libs = new Set();
+
+    seen[r][c]=true;
+    while(stack.length){
+      const [cr,cc] = stack.pop();
+      stones.push([cr,cc]);
+      for(const [nr,nc] of this.neighbors4(cr,cc)){
+        if(board[nr][nc]===0) libs.add(nr+"_"+nc);
+        else if(board[nr][nc]===color && !seen[nr][nc]){
+          seen[nr][nc]=true; stack.push([nr,nc]);
+        }
+      }
+    }
+    return {stones, libs};
+  }
+
+  removeStones(board, stones){
+    for(const [r,c] of stones) board[r][c]=0;
+  }
+
+  // ---------- capture + legality ----------
+  applyMoveSim(board, r, c, player){
+    const nb = this.cloneBoard(board);
+    nb[r][c]=player;
+    const opp = -player;
+    let capturedStones = [];
+
+    for(const [nr,nc] of this.neighbors4(r,c)){
+      if(nb[nr][nc]!==opp) continue;
+      const g = this.getGroup(nb, nr, nc);
+      if(g.libs.size===0){
+        capturedStones = capturedStones.concat(g.stones);
+        this.removeStones(nb, g.stones);
+      }
+    }
+    return { nb, capturedStones };
+  }
+
+  isLegalMove(r,c,player){
+    if(!this.inBounds(r,c)) return {ok:false,msg:"超出棋盤"};
+    if(this.board[r][c]!==0) return {ok:false,msg:"此處已有子"};
+
+    const { nb } = this.applyMoveSim(this.board, r, c, player);
+
+    // suicide check
+    const myGroup = this.getGroup(nb, r, c);
+    if(myGroup.libs.size===0) return {ok:false,msg:"禁著點：自殺（無氣）"};
+
+    // simple KO
+    const newHash = this.hashBoard(nb);
+    if(newHash === this.prevBoardHash) return {ok:false,msg:"禁著點：劫（需先在別處下一手）"};
+
+    return {ok:true, nb};
+  }
+
+  hasAnyLegalMove(player){
+    for(let r=0;r<this.N;r++){
+      for(let c=0;c<this.N;c++){
+        if(this.board[r][c]!==0) continue;
+        if(this.isLegalMove(r,c,player).ok) return true;
+      }
+    }
+    return false;
+  }
+
+  // ---------- Atari (叫吃) detection ----------
+  findAtariGroups(board, player){
+    const seen = Array(this.N).fill(0).map(()=>Array(this.N).fill(false));
+    const atari = [];
+    for(let r=0;r<this.N;r++){
+      for(let c=0;c<this.N;c++){
+        if(board[r][c]!==player || seen[r][c]) continue;
+        const g = this.getGroup(board, r, c);
+        for(const [sr,sc] of g.stones) seen[sr][sc]=true;
+        if(g.libs.size===1) atari.push(g.stones);
+      }
+    }
+    return atari;
+  }
+
+  updateAtariWarnings(lastPlayer){
+    this.atariHighlights = [];
+
+    const opp = -lastPlayer;
+    const oppAtari = this.findAtariGroups(this.board, opp);
+    const selfAtari = this.findAtariGroups(this.board, lastPlayer);
+
+    for(const stones of oppAtari) this.atariHighlights.push({stones, kind:"opp"});
+    for(const stones of selfAtari) this.atariHighlights.push({stones, kind:"self"});
+
+    const nameOf = (p) => (p===1 ? "黑方" : "白方");
+
+    let extra = "";
+    if(oppAtari.length > 0){
+      extra += `叫吃！${nameOf(opp)} 有 ${oppAtari.length} 塊只剩 1 氣。<br>`;
+    }
+    if(selfAtari.length > 0){
+      extra += `小心！${nameOf(lastPlayer)} 有 ${selfAtari.length} 塊只剩 1 氣。<br>`;
+    }
+    return extra;
+  }
+
+  // ---------- Play move ----------
+  tryPlay(r,c,player){
+    if(this.gameOver) return {ok:false,msg:"已終局"};
+    const chk = this.isLegalMove(r,c,player);
+    if(!chk.ok) return chk;
+
+    const { capturedStones } = this.applyMoveSim(this.board, r, c, player);
+
+    this.history.push({
+      board: this.cloneBoard(this.board),
+      currentPlayer: this.currentPlayer,
+      consecutivePasses: this.consecutivePasses,
+      prevBoardHash: this.prevBoardHash,
+      lastMove: this.lastMove ? {...this.lastMove} : null,
+      captures: { ...this.captures }
+    });
+
+    this.prevBoardHash = this.hashBoard(this.board);
+    this.board = chk.nb;
+
+    if(capturedStones.length > 0){
+      if(player === 1) this.captures.black += capturedStones.length;
+      else this.captures.white += capturedStones.length;
+
+      const now = performance.now();
+      for(const [rr,cc] of capturedStones){
+        this.captureAnims.push({ r: rr, c: cc, player: -player, start: now, dur: 420 });
+      }
+    }
+
+    this.lastMove = {r,c,player};
+    this.consecutivePasses = 0;
+
+    this.currentPlayer = -player;
+
+    const extra = this.updateAtariWarnings(player);
+
+    this.draw();
+    this.updateStatus(extra);
+
+    return {ok:true};
+  }
+
+  onCanvasClick(e){
+    if(this.gameOver) return;
+
+    // 你永遠只下黑
+    if(this.currentPlayer !== 1) return;
+
+    const {r,c} = this.pickIntersection(e);
+    if(r===null) return;
+
+    const res = this.tryPlay(r,c,1);
+    if(!res.ok){
+      this.setStatus(`<strong>黑方</strong>：${res.msg}`, "warn");
+      setTimeout(()=>this.updateStatus(), 650);
+      return;
+    }
+
+    this.afterMove();
+
+    // 永遠：輪到白就讓電腦走
+    if(!this.gameOver && this.currentPlayer === -1){
+      setTimeout(()=>this.aiMove(), 220);
+    }
+  }
+
+  afterMove(){
+    if(this.gameOver) return;
+
+    const canMove = this.hasAnyLegalMove(this.currentPlayer);
+    const oppCanMove = this.hasAnyLegalMove(-this.currentPlayer);
+
+    if(!canMove && !oppCanMove){
+      this.setStatus("雙方都沒有合法棋步 → 自動終局", "warn");
+      setTimeout(()=>this.endGame("終局：雙方都無合法棋步"), 650);
+      return;
+    }
+
+    if(!canMove && oppCanMove){
+      const who = this.currentPlayer===1 ? "黑方" : "白方";
+      this.setStatus(`${who} 沒有合法棋步 → 自動虛手`, "warn");
+      setTimeout(()=>this.pass(true), 650);
+    }
+  }
+
+  pass(isAuto=false){
+    if(this.gameOver) return;
+
+    this.history.push({
+      board: this.cloneBoard(this.board),
+      currentPlayer: this.currentPlayer,
+      consecutivePasses: this.consecutivePasses,
+      prevBoardHash: this.prevBoardHash,
+      lastMove: this.lastMove ? {...this.lastMove} : null,
+      captures: { ...this.captures }
+    });
+
+    this.consecutivePasses += 1;
+
+    if(this.consecutivePasses >= 2){
+      this.endGame("終局：連續兩次虛手");
+      return;
+    }
+
+    const lastPlayer = this.currentPlayer;
+    this.currentPlayer = -this.currentPlayer;
+
+    this.atariHighlights = [];
+    this.draw();
+    this.updateStatus();
+
+    this.afterMove();
+
+    // 輪到白就電腦走
+    if(!this.gameOver && this.currentPlayer === -1){
+      setTimeout(()=>this.aiMove(), isAuto ? 220 : 420);
+    }
+  }
+
+  // ---------- AI ----------
+  aiMove(){
+    if(this.gameOver) return;
+    if(this.currentPlayer !== -1) return;
+
+    if(!this.hasAnyLegalMove(-1)){
+      this.pass(true);
+      return;
+    }
+
+    const moves=[];
+    for(let r=0;r<this.N;r++){
+      for(let c=0;c<this.N;c++){
+        if(this.board[r][c]!==0) continue;
+        const chk = this.isLegalMove(r,c,-1);
+        if(!chk.ok) continue;
+        const score = this.evaluateAIMove(r,c,chk.nb);
+        moves.push({r,c,score});
+      }
+    }
+    moves.sort((a,b)=>b.score-a.score);
+    const best = moves[0];
+    this.tryPlay(best.r,best.c,-1);
+    this.afterMove();
+  }
+
+  evaluateAIMove(r,c,simBoard){
+    // 1) 提子優先 2) 氣多 3) 星位/角/邊 4) 靠近黑子 5) 避免自家叫吃
+    let s=0;
+
+    const before = this.countStones(this.board);
+    const after  = this.countStones(simBoard);
+    const capturedBlack = before.black - after.black;
+    if(capturedBlack>0) s += capturedBlack * 130;
+
+    const g = this.getGroup(simBoard,r,c);
+    s += Math.min(10, g.libs.size) * 6;
+
+    const isStar = this.starPoints.some(p=>p.r===r && p.c===c);
+    if(isStar) s += 16;
+    const isCorner = (r===0||r===8) && (c===0||c===8);
+    if(isCorner) s += 12;
+    const isEdge = (r===0||r===8||c===0||c===8);
+    if(isEdge) s += 4;
+
+    for(const [nr,nc] of this.neighbors8(r,c)){
+      if(this.inBounds(nr,nc) && this.board[nr][nc]===1) s += 4;
+    }
+
+    const selfAtari = this.findAtariGroups(simBoard, -1);
+    if(selfAtari.length>0) s -= 18 * selfAtari.length;
+
+    s += Math.random()*2;
+    return s;
+  }
+
+  // ---------- Overlay data ----------
+  getEmptyRegions(board){
+    const vis = Array(this.N).fill(0).map(()=>Array(this.N).fill(false));
+    const regions = [];
+    for(let r=0;r<this.N;r++){
+      for(let c=0;c<this.N;c++){
+        if(board[r][c]!==0 || vis[r][c]) continue;
+        const stack=[[r,c]];
+        vis[r][c]=true;
+        const pts=[];
+        const borderColors = new Set();
+        while(stack.length){
+          const [cr,cc]=stack.pop();
+          pts.push([cr,cc]);
+          for(const [nr,nc] of this.neighbors4(cr,cc)){
+            if(board[nr][nc]===0 && !vis[nr][nc]){
+              vis[nr][nc]=true; stack.push([nr,nc]);
+            }else if(board[nr][nc]!==0){
+              borderColors.add(board[nr][nc]);
+            }
+          }
+        }
+        regions.push({pts, borderColors});
+      }
+    }
+    return regions;
+  }
+
+  removeDeadByBenson(board){
+    let b = this.cloneBoard(board);
+    const colors = [1,-1];
+
+    for(const color of colors){
+      let changed = true;
+      while(changed){
+        changed = false;
+
+        const regions = this.getEmptyRegions(b);
+        const eyeRegionIdx = new Set();
+        regions.forEach((reg, idx)=>{
+          if(reg.borderColors.size===1 && reg.borderColors.has(color)) eyeRegionIdx.add(idx);
+        });
+
+        const pointToRegion = new Map();
+        regions.forEach((reg, idx)=>{
+          for(const [r,c] of reg.pts) pointToRegion.set(r+"_"+c, idx);
+        });
+
+        const seen = Array(this.N).fill(0).map(()=>Array(this.N).fill(false));
+        const blocks = [];
+
+        for(let r=0;r<this.N;r++){
+          for(let c=0;c<this.N;c++){
+            if(b[r][c]!==color || seen[r][c]) continue;
+            const g = this.getGroup(b, r, c);
+            for(const [sr,sc] of g.stones) seen[sr][sc]=true;
+
+            const adjEyes = new Set();
+            for(const [sr,sc] of g.stones){
+              for(const [nr,nc] of this.neighbors4(sr,sc)){
+                if(b[nr][nc]===0){
+                  const idx = pointToRegion.get(nr+"_"+nc);
+                  if(idx!==undefined && eyeRegionIdx.has(idx)) adjEyes.add(idx);
+                }
+              }
+            }
+            blocks.push({stones:g.stones, eyes: adjEyes.size});
+          }
+        }
+
+        for(const blk of blocks){
+          if(blk.eyes < 2){
+            this.removeStones(b, blk.stones);
+            changed = true;
+          }
+        }
+      }
+    }
+    return b;
+  }
+
+  computeOverlayData(){
+    const cleaned = this.removeDeadByBenson(this.board);
+
+    const dead = [];
+    const alive = [];
+    for(let r=0;r<this.N;r++){
+      for(let c=0;c<this.N;c++){
+        if(this.board[r][c]===0) continue;
+        if(cleaned[r][c]===0) dead.push([r,c]);
+        else alive.push([r,c]);
+      }
+    }
+
+    const regions = this.getEmptyRegions(cleaned);
+    const blackTerr = [];
+    const whiteTerr = [];
+    const neutral = [];
+    for(const reg of regions){
+      if(reg.borderColors.size===1){
+        const only = [...reg.borderColors][0];
+        if(only===1) blackTerr.push(...reg.pts);
+        else if(only===-1) whiteTerr.push(...reg.pts);
+        else neutral.push(...reg.pts);
+      }else{
+        neutral.push(...reg.pts);
+      }
+    }
+    return { alive, dead, blackTerr, whiteTerr, neutral };
+  }
+
+  // ---------- Drawing ----------
+  draw(){
+    const ctx = this.ctx;
+    ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
+
+    // grid lines
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "rgba(50, 40, 25, 0.78)";
+    for(let i=0;i<this.N;i++){
+      const x = this.padding + i*this.cell;
+      const y = this.padding + i*this.cell;
+      ctx.beginPath(); ctx.moveTo(this.padding, y); ctx.lineTo(this.canvas.width - this.padding, y); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x, this.padding); ctx.lineTo(x, this.canvas.height - this.padding); ctx.stroke();
+    }
+
+    // star points
+    for(const p of this.starPoints){
+      const {x,y} = this.rcToXY(p.r,p.c);
+      ctx.beginPath();
+      ctx.fillStyle = "rgba(50, 40, 25, 0.78)";
+      ctx.arc(x,y,5.2,0,Math.PI*2);
+      ctx.fill();
+    }
+
+    // overlay (territory + alive/dead markers)
+    let ov = null;
+    if(this.showOverlay){
+      ov = this.computeOverlayData();
+      this.drawTerritoryOverlay(ov);
+    }
+
+    // last move ring
+    if(this.lastMove){
+      const {x,y} = this.rcToXY(this.lastMove.r, this.lastMove.c);
+      ctx.beginPath();
+      ctx.strokeStyle = "rgba(43,182,115,0.95)";
+      ctx.lineWidth = 3;
+      ctx.arc(x,y, this.cell*0.22, 0, Math.PI*2);
+      ctx.stroke();
+    }
+
+    // stones
+    for(let r=0;r<this.N;r++){
+      for(let c=0;c<this.N;c++){
+        const v = this.board[r][c];
+        if(v===0) continue;
+        this.drawStone(r,c,v);
+      }
+    }
+
+    // capture anims
+    this.drawCaptureAnims();
+
+    // atari rings
+    this.drawAtariHighlights();
+
+    if(this.showOverlay && ov){
+      this.drawAliveDeadMarkers(ov);
+    }
+  }
+
+  drawStone(r,c,player){
+    const ctx = this.ctx;
+    const {x,y} = this.rcToXY(r,c);
+    const radius = this.cell*0.40;
+
+    // soft shadow
+    ctx.beginPath();
+    ctx.fillStyle = "rgba(0,0,0,0.18)";
+    ctx.arc(x+2,y+3,radius,0,Math.PI*2);
+    ctx.fill();
+
+    const g = ctx.createRadialGradient(x-radius*0.25, y-radius*0.25, radius*0.2, x, y, radius);
+    if(player===1){ g.addColorStop(0, "#3c3c3c"); g.addColorStop(1, "#080808"); }
+    else{ g.addColorStop(0, "#ffffff"); g.addColorStop(1, "#d9dde3"); }
+
+    ctx.beginPath(); ctx.fillStyle = g; ctx.arc(x,y,radius,0,Math.PI*2); ctx.fill();
+
+    ctx.beginPath();
+    ctx.strokeStyle = player===1 ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)";
+    ctx.lineWidth = 2;
+    ctx.arc(x,y,radius,0,Math.PI*2);
+    ctx.stroke();
+  }
+
+  drawTerritoryOverlay(ov){
+    const ctx = this.ctx;
+    const drawDots = (pts, fillStyle) => {
+      ctx.fillStyle = fillStyle;
+      for(const [r,c] of pts){
+        const {x,y} = this.rcToXY(r,c);
+        ctx.beginPath();
+        ctx.arc(x,y, this.cell*0.12, 0, Math.PI*2);
+        ctx.fill();
+      }
+    };
+    drawDots(ov.blackTerr, "rgba(0,0,0,0.18)");
+    drawDots(ov.whiteTerr, "rgba(255,255,255,0.18)");
+    drawDots(ov.neutral,   "rgba(43,182,115,0.12)");
+  }
+
+  drawAliveDeadMarkers(ov){
+    const ctx = this.ctx;
+
+    // alive ring (green)
+    for(const [r,c] of ov.alive){
+      const {x,y} = this.rcToXY(r,c);
+      ctx.beginPath();
+      ctx.strokeStyle = "rgba(43,182,115,0.95)";
+      ctx.lineWidth = 3;
+      ctx.arc(x,y, this.cell*0.24, 0, Math.PI*2);
+      ctx.stroke();
+    }
+
+    // dead X (red)
+    for(const [r,c] of ov.dead){
+      const {x,y} = this.rcToXY(r,c);
+      const s = this.cell*0.22;
+      ctx.strokeStyle = "rgba(239, 68, 68, 0.95)";
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(x-s, y-s); ctx.lineTo(x+s, y+s);
+      ctx.moveTo(x+s, y-s); ctx.lineTo(x-s, y+s);
+      ctx.stroke();
+    }
+  }
+
+  drawAtariHighlights(){
+    const ctx = this.ctx;
+    if(!this.atariHighlights.length) return;
+
+    for(const item of this.atariHighlights){
+      const color = item.kind==="opp" ? "rgba(245, 158, 11, 0.95)" : "rgba(249, 115, 22, 0.95)";
+      for(const [r,c] of item.stones){
+        const {x,y} = this.rcToXY(r,c);
+        ctx.beginPath();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 3;
+        ctx.arc(x,y, this.cell*0.22, 0, Math.PI*2);
+        ctx.stroke();
+      }
+    }
+  }
+
+  drawCaptureAnims(){
+    const ctx = this.ctx;
+    const now = performance.now();
+    this.captureAnims = this.captureAnims.filter(a => now - a.start < a.dur);
+
+    for(const a of this.captureAnims){
+      const t = (now - a.start) / a.dur;
+      const alpha = 1 - t;
+      const shrink = 1 - 0.7*t;
+
+      const {x,y} = this.rcToXY(a.r, a.c);
+      const radius = this.cell*0.40 * shrink;
+
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, alpha);
+      const g = ctx.createRadialGradient(x-radius*0.25, y-radius*0.25, radius*0.2, x, y, radius);
+      if(a.player===1){ g.addColorStop(0, "#3c3c3c"); g.addColorStop(1, "#080808"); }
+      else{ g.addColorStop(0, "#ffffff"); g.addColorStop(1, "#d9dde3"); }
+      ctx.beginPath(); ctx.fillStyle = g; ctx.arc(x,y,radius,0,Math.PI*2); ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  startAnimLoop(){
+    const loop = () => {
+      if(this.captureAnims.length > 0){
+        this.draw();
+      }
+      requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);
+  }
+
+  // ---------- Status ----------
+  updateStatus(extraHtml=""){
+    if(this.gameOver) return;
+
+    const name = (p)=> p===1 ? "黑方" : "白方";
+    const playerName = name(this.currentPlayer);
+
+    const canMove = this.hasAnyLegalMove(this.currentPlayer);
+    if(canMove){
+      this.setStatus(`${extraHtml}<strong>${playerName}回合</strong>：${this.currentPlayer===1 ? "點交叉點下子（你）" : "電腦思考中…"}`);
+    }else{
+      this.setStatus(`${extraHtml}<strong>${playerName}</strong> 沒有合法棋步 → 將自動虛手`, "warn");
+    }
+  }
+
+  // ---------- Undo ----------
+  undo(){
+    if(this.gameOver || this.history.length===0) return;
+
+    const snap = this.history.pop();
+    this.board = this.cloneBoard(snap.board);
+    this.currentPlayer = snap.currentPlayer;
+    this.consecutivePasses = snap.consecutivePasses;
+    this.prevBoardHash = snap.prevBoardHash;
+    this.lastMove = snap.lastMove;
+    this.captures = { ...snap.captures };
+
+    this.atariHighlights = [];
+    this.captureAnims = [];
+
+    this.draw();
+    this.updateStatus();
+  }
+
+  // ---------- scoring (internal only) ----------
+  countStones(board){
+    let black=0, white=0;
+    for(let r=0;r<this.N;r++){
+      for(let c=0;c<this.N;c++){
+        if(board[r][c]===1) black++;
+        else if(board[r][c]===-1) white++;
+      }
+    }
+    return {black, white};
+  }
+
+  scoreArea(board){
+    const stones = this.countStones(board);
+    let blackTerr=0, whiteTerr=0;
+
+    const regions = this.getEmptyRegions(board);
+    for(const reg of regions){
+      if(reg.borderColors.size===1){
+        const only = [...reg.borderColors][0];
+        if(only===1) blackTerr += reg.pts.length;
+        else if(only===-1) whiteTerr += reg.pts.length;
+      }
+    }
+
+    const blackScore = stones.black + blackTerr;
+    const whiteScore = stones.white + whiteTerr + this.komi;
+    return {blackScore, whiteScore};
+  }
+
+  // ---------- End game (winner only) ----------
+  endGame(reason){
+    this.gameOver = true;
+    document.getElementById("undoBtn").disabled = true;
+    document.getElementById("passBtn").disabled = true;
+
+    // 只判斷勝負（不顯示數子明細）
+    const { blackScore, whiteScore } = this.scoreArea(this.board);
+    let winner = "平手";
+    if(blackScore > whiteScore) winner = "黑方勝（你贏）";
+    else if(whiteScore > blackScore) winner = "白方勝（電腦贏）";
+
+    this.draw();
+    this.setStatus(
+      `${reason}<br><strong>結果：</strong>${winner}`,
+      "over"
+    );
+  }
+}
+
+// globals
+let game=null;
+
+function newGame(){
+  document.getElementById("undoBtn").disabled = false;
+  document.getElementById("passBtn").disabled = false;
+  document.getElementById("overlayBtn").textContent = "活棋/地盤 顯示：關";
+
+  game = new NineBoardGo();
+
+  // black starts, no handicap, always user first
+}
+
+function passAndMaybeAIMove(){
+  // unused, left intentionally blank
+}
+
+window.onload = ()=>newGame();
+</script>
+
+<script>
+// Attach pass + AI behavior after game exists (keeps main class clean)
+document.addEventListener("DOMContentLoaded", () => {
+  // no-op
+});
+
+// Monkey-patch: call AI after pass as well (keeps code minimal)
+const _newGame = newGame;
+newGame = function(){
+  _newGame();
+};
+
+// Override pass button behavior to keep AI always on
+document.addEventListener("click", (e)=>{
+  // no-op
+});
+</script>
+
+<script>
+// Keep AI always: we hook into prototype methods (simple, stable)
+(function(){
+  const oldNewGame = window.newGame;
+  window.newGame = function(){
+    oldNewGame();
+    // bind: after every user move, AI already called in onCanvasClick
+    // after pass, we ensure AI also responds when it's white's turn
+    const passBtn = document.getElementById("passBtn");
+    passBtn.onclick = ()=>{
+      if(!window.game) return;
+      window.game.pass(false);
+      if(!window.game.gameOver && window.game.currentPlayer === -1){
+        setTimeout(()=>window.game.aiMove(), 240);
+      }
+    };
+  };
+})();
+</script>
+
+<script>
+// Add remaining methods to class via prototype to avoid rewriting blocks
+// (These are still part of the same file; just kept here for readability)
+NineBoardGo.prototype.pass = function(isAuto=false){
+  if(this.gameOver) return;
+
+  this.history.push({
+    board: this.cloneBoard(this.board),
+    currentPlayer: this.currentPlayer,
+    consecutivePasses: this.consecutivePasses,
+    prevBoardHash: this.prevBoardHash,
+    lastMove: this.lastMove ? {...this.lastMove} : null,
+    captures: { ...this.captures }
+  });
+
+  this.consecutivePasses += 1;
+
+  if(this.consecutivePasses >= 2){
+    this.endGame("終局：連續兩次虛手");
+    return;
+  }
+
+  // switch player
+  this.currentPlayer = -this.currentPlayer;
+  this.atariHighlights = [];
+  this.draw();
+  this.updateStatus();
+
+  // auto-pass if no moves
+  const canMove = this.hasAnyLegalMove(this.currentPlayer);
+  const oppCanMove = this.hasAnyLegalMove(-this.currentPlayer);
+  if(!canMove && !oppCanMove){
+    this.setStatus("雙方都沒有合法棋步 → 自動終局", "warn");
+    setTimeout(()=>this.endGame("終局：雙方都無合法棋步"), 650);
+    return;
+  }
+  if(!canMove && oppCanMove){
+    const who = this.currentPlayer===1 ? "黑方" : "白方";
+    this.setStatus(`${who} 沒有合法棋步 → 自動虛手`, "warn");
+    setTimeout(()=>this.pass(true), 650);
+    return;
+  }
+};
+
+NineBoardGo.prototype.aiMove = function(){
+  if(this.gameOver) return;
+  if(this.currentPlayer !== -1) return;
+
+  this.updateStatus(); // show "電腦思考中…"
+
+  if(!this.hasAnyLegalMove(-1)){
+    this.pass(true);
+    return;
+  }
+
+  const moves=[];
+  for(let r=0;r<this.N;r++){
+    for(let c=0;c<this.N;c++){
+      if(this.board[r][c]!==0) continue;
+      const chk = this.isLegalMove(r,c,-1);
+      if(!chk.ok) continue;
+      const score = this.evaluateAIMove(r,c,chk.nb);
+      moves.push({r,c,score});
+    }
+  }
+  moves.sort((a,b)=>b.score-a.score);
+  const best = moves[0];
+
+  this.tryPlay(best.r,best.c,-1);
+
+  // after AI move, if black cannot move, auto-pass chain handled in pass()
+  const canMove = this.hasAnyLegalMove(this.currentPlayer);
+  const oppCanMove = this.hasAnyLegalMove(-this.currentPlayer);
+  if(!canMove && !oppCanMove){
+    this.setStatus("雙方都沒有合法棋步 → 自動終局", "warn");
+    setTimeout(()=>this.endGame("終局：雙方都無合法棋步"), 650);
+    return;
+  }
+  if(!canMove && oppCanMove){
+    this.setStatus("黑方沒有合法棋步 → 自動虛手", "warn");
+    setTimeout(()=>this.pass(true), 650);
+  }
+};
+</script>
+</body>
+</html>
